@@ -11,7 +11,6 @@ router.post("/", asyncHandler(async (req, res) => {
 
     // 이미 가입된 이메일인지 체크 => password 암호화
     const user = await userModel.findOne({email});
-    console.log('user', user);
     if (user) {
         return res.json({
             msg: "email is existed"
@@ -36,6 +35,31 @@ router.post("/", asyncHandler(async (req, res) => {
 
 }))
 
+router.post("/login", asyncHandler(async (req, res) => {
+
+    const {email, password} = req.body;
+
+    // 이메일 존재 확인 => 패스워드 디코딩해서 일치 여부 확인
+    userModel.findOne({email}, async (err, user) => {
+        if (!user) {
+            return res.json({
+                msg: "you must register"
+            })
+        }
+
+        const isMatched = await bcrypt.compare(password, user.password)
+        if (!isMatched) {
+            return res.json({
+                msg: "wrong password"
+            })
+        }
+
+        res.json({
+            msg: "login successful",
+            user: user
+        })
+    })
+}))
 
 
 export default router;

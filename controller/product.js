@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
-import productModel from "../model/product.js";
+import ProductModel from "../model/product.js";
 
 const getProducts = asyncHandler(async (req, res) => {
-    const products = await productModel.find();
+    const products = await ProductModel.find();
     res.json({
         msg: "product total get",
         count: products.length,
@@ -11,7 +11,7 @@ const getProducts = asyncHandler(async (req, res) => {
 })
 
 const getProduct = asyncHandler(async (req, res) => {
-    const product = await productModel.findById(req.params.id)
+    const product = await ProductModel.findById(req.params.id)
     res.json({
         msg: "product detail get",
         product
@@ -21,7 +21,7 @@ const getProduct = asyncHandler(async (req, res) => {
 const createProduct = asyncHandler(async (req, res) => {
     const {title, price, category, brand, desc} = req.body;
 
-    const newProduct = new productModel({
+    const newProduct = new ProductModel({
         title, price, category, brand, desc
     })
 
@@ -35,7 +35,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
     const {title, price, category, brand, desc} = req.body;
-    const product = await productModel.findById(req.params.id);
+    const product = await ProductModel.findById(req.params.id);
 
     if (product) {
         product.title = title || product.title;
@@ -54,14 +54,14 @@ const updateProduct = asyncHandler(async (req, res) => {
 });
 
 const deleteProducts = asyncHandler(async (req, res) => {
-    await productModel.deleteMany();
+    await ProductModel.deleteMany();
     res.json({
         msg: "product delete"
     })
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
-    const product = await productModel.findById(req.params.id);
+    const product = await ProductModel.findById(req.params.id);
     if (product) {
         await product.remove();
         res.json({

@@ -13,6 +13,9 @@ const userSchema = mongoose.Schema(
         nickname: {
             type: String,
             required: true
+        },
+        profileImg: {
+            type: String
         }
 
     },

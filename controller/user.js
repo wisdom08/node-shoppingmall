@@ -19,11 +19,18 @@ const register = asyncHandler(async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    // 프로필 이미지 생성
+    const profileImg = gravatar.url(
+        email,
+        {s: '200', r: 'pg', d: 'mm'},
+        {protocol: 'https'}
+    );
 
     const newUser = new UserModel({
         email,
         password: hashedPassword,
-        nickname
+        nickname,
+        profileImg
     })
 
     const createdUser = await newUser.save();

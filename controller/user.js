@@ -59,4 +59,8 @@ const login = asyncHandler(async (req, res) => {
     }
 })
 
-export {register, login}
+const getInfo = asyncHandler(async (req, res) => {
+    res.json(req.user)
+});
+
+export {register, login, getInfo}

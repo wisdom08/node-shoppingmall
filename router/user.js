@@ -1,5 +1,5 @@
 import express from "express";
-import {login, register} from "../controller/user.js";
+import {login, register, getInfo} from "../controller/user.js";
 import asyncHandler from "express-async-handler";
 import {admin, protect} from "../middleware/authMiddleware.js";
 import UserModel from '../model/user.js';
@@ -7,9 +7,7 @@ import UserModel from '../model/user.js';
 const router = express.Router();
 
 // my profile 불러오기
-router.get('/info', protect, asyncHandler(async (req, res) => {
-    res.json(req.user);
-}))
+router.get('/info', protect, getInfo)
 
 router.post("/",register)
 

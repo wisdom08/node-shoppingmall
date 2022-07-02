@@ -27,7 +27,8 @@ const makeOrder =  asyncHandler(async (req, res) => {
 
     const {product, quantity} = req.body;
     const newOrder = new OrderModel({
-        product, quantity
+        product, quantity,
+        user: req.user._id
     })
 
     const createOrder = await newOrder.save();

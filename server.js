@@ -8,10 +8,19 @@ import userRouter from './router/user.js';
 import connectDB from "./config/db.js";
 import dotenv from 'dotenv';
 import {errorHandler, notFound} from "./middleware/errorMiddleware.js";
+import fs from 'fs';
+import https from 'https';
 dotenv.config();
 
-const app = express();
+const httpOptions = {
+    key: fs.readFileSync('./.cert//key.pem'),
+    cert: fs.readFileSync('./.cert/cert.pem'),
+    requestCert: false,
+    rejectUnauthorized: false
+}
 
+const app = express();
+const server = https.createServer(httpOptions, app);
 // connect db
 connectDB();
 
@@ -32,7 +41,7 @@ app.use("/order", orderRouter);
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
     console.log('server started!');
 })
 

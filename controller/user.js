@@ -1,10 +1,6 @@
 import asyncHandler from "express-async-handler";
 import UserModel from '../model/user.js'
-import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
-import gravatar from 'gravatar'
-
-const saltRounds = 10;
 
 const register = asyncHandler(async (req, res) => {
     const {email, password, nickname} = req.body;
@@ -16,20 +12,11 @@ const register = asyncHandler(async (req, res) => {
         throw new Error('User already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // 프로필 이미지 생성
-    const profileImg = gravatar.url(
-        email,
-        {s: '200', r: 'pg', d: 'mm'},
-        {protocol: 'https'}
-    );
 
     const newUser = new UserModel({
         email,
-        password: hashedPassword,
+        password,
         nickname,
-        profileImg
     })
 
     const createdUser = await newUser.save();
@@ -53,23 +40,23 @@ const login = asyncHandler(async (req, res) => {
         throw new Error('you must register')
     }
 
-    const isMatched = await bcrypt.compare(password, user.password)
-    if (!isMatched) {
-        res.status(408)
-        throw new Error('wrong password')
+    // const isMatched = await bcrypt.compare(password, user.password)
+    if (user && (await user.passwordMatched(password))) {
+        // JSON WEB TOKEN 생성
+        const token = await jwt.sign(
+            {id: user._id},
+            process.env.SECRET_OR_KEY,
+            {expiresIn: "30m"}
+        );
+
+        res.json({
+            msg: "login successful",
+            token
+        })
+    } else {
+        res.status(400)
+        throw new Error('wrong password');
     }
-
-    // JSON WEB TOKEN 생성
-    const token = await jwt.sign(
-        {id: user._id},
-        process.env.SECRET_OR_KEY,
-        {expiresIn: "30m"}
-    );
-
-    res.json({
-        msg: "login successful",
-        token
-    })
 })
 
 export {register, login}

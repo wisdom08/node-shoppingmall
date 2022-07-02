@@ -12,9 +12,8 @@ const register = asyncHandler(async (req, res) => {
     // 이미 가입된 이메일인지 체크 => password 암호화
     const user = await UserModel.findOne({email});
     if (user) {
-        return res.json({
-            msg: "email is existed"
-        })
+        res.status(400)
+        throw new Error('User already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -50,16 +49,14 @@ const login = asyncHandler(async (req, res) => {
     const user = await UserModel.findOne({email: email});
 
     if (!user) {
-        return res.json({
-            msg: "you must register"
-        })
+        res.status(400)
+        throw new Error('you must register')
     }
 
     const isMatched = await bcrypt.compare(password, user.password)
     if (!isMatched) {
-        return res.json({
-            msg: "wrong password"
-        })
+        res.status(408)
+        throw new Error('wrong password')
     }
 
     // JSON WEB TOKEN 생성

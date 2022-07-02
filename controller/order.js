@@ -11,6 +11,12 @@ const getOrders = asyncHandler(async(req, res) => {
 
 const getOrder = asyncHandler(async(req, res) => {
     const order = await OrderModel.findById(req.params.id);
+
+    if (!order) {
+        res.status(400)
+        throw new Error('no order');
+    }
+
     res.json({
         msg: "order detail get",
         order

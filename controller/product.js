@@ -12,10 +12,16 @@ const getProducts = asyncHandler(async (req, res) => {
 
 const getProduct = asyncHandler(async (req, res) => {
     const product = await ProductModel.findById(req.params.id)
+
+    if (!product) {
+        res.status(400)
+        throw new Error('no product');
+    }
+
     res.json({
         msg: "product detail get",
         product
-    })
+    });
 })
 
 const createProduct = asyncHandler(async (req, res) => {

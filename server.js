@@ -7,6 +7,7 @@ import productRouter from './router/product.js';
 import userRouter from './router/user.js';
 import connectDB from "./config/db.js";
 import dotenv from 'dotenv';
+import {errorHandler, notFound} from "./middleware/errorMiddleware.js";
 dotenv.config();
 
 const app = express();
@@ -24,6 +25,9 @@ app.use(morgan("dev"));
 app.use("/user", userRouter);
 app.use("/product", productRouter);
 app.use("/order", orderRouter);
+
+app.use(notFound)
+app.use(errorHandler)
 
 app.listen(process.env.PORT, () => {
     console.log('server started!');

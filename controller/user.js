@@ -63,4 +63,40 @@ const getInfo = asyncHandler(async (req, res) => {
     res.json(req.user)
 });
 
-export {register, login, getInfo}
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await UserModel.find();
+    res.json(users)
+});
+
+const updateUser =  asyncHandler(async (req, res) => {
+    // 유저 조회 => 전체 데이터 교체
+    const {email, password, nickname, profileImg, role} = req.body;
+
+    console.log("=>(user.js:76) email, password, nickname, profileImg, role", email, password, nickname, profileImg, role);
+
+    const user = await UserModel.findOne({email});
+
+    console.log("=>(user.js:80) user", user);
+
+    if (user) {
+        user.email = email || user.email;
+        user.password = password || user.password;
+        user.nickname = nickname || user.nickname;
+        user.profileImg = profileImg || user.profileImg;
+        user.role = role || user.role;
+
+        const updatedUser = await user.save();
+
+        res.json({
+            msg: "user put",
+            user: updatedUser
+        });
+    } else {
+        res.status(404);
+        throw new Error("user not found");
+    }
+
+
+})
+
+export {register, login, getInfo, updateUser, getAllUsers}

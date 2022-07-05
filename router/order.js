@@ -8,7 +8,7 @@ router.get('/myorder', protect, getMyOrder)
 
 router.get('/', protect, admin, getOrders);
 
-router.get('/:id', getOrder);
+router.get('/:id', protect, getOrder);
 
 router.post('/', protect, makeOrder);
 

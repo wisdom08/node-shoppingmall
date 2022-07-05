@@ -7,6 +7,7 @@ import {
     getProducts,
     updateProduct
 } from "../controller/product.js";
+import {admin} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -18,16 +19,16 @@ router.get('/', getProducts);
 router.get('/:id', getProduct);
 
 // 제품 등록
-router.post('/', createProduct);
+router.post('/', admin, createProduct);
 
 // 제품 수정
-router.put('/:id', updateProduct);
+router.put('/:id', admin, updateProduct);
 
 // 전체 삭제
-router.delete('/', deleteProducts);
+router.delete('/',admin, deleteProducts);
 
 // 디테일 삭제
-router.delete('/:id', deleteProduct);
+router.delete('/:id',admin, deleteProduct);
 
 
 export default router;

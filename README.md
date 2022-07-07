@@ -7,6 +7,9 @@
 - AWS
 
 ## API
+
+https://documenter.getpostman.com/view/11069976/UzJJvHhr
+
 1. product
    - 전체 상품 조회
    - 개별 상품 조회
